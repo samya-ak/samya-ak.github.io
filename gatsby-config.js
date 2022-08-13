@@ -1,14 +1,15 @@
 module.exports = {
+  pathPrefix: "/",
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `samya-ak`,
     author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
+      name: `Samyak Maharjan`,
+      summary: `who lives in Nepal.`,
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
+    description: `Playling with gatsby`,
+    siteUrl: `https://www.samya-ak.github.io`,
     social: {
-      twitter: `kylemathews`,
+      github: "samya-ak",
     },
   },
   plugins: [
@@ -115,7 +116,7 @@ module.exports = {
         // https://css-tricks.com/meta-theme-color-and-trickery/
         // theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        icon: `src/images/profile-pic.jpeg`, // This path is relative to the root of the site.
       },
     },
   ],
