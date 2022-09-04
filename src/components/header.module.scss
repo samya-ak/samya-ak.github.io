@@ -1,0 +1,22 @@
+.nav ul {
+	display: flex;
+	justify-content: flex-end;
+	list-style: none;
+	align-items: center;
+	li {
+		margin-right: 2rem;
+		a{
+			text-decoration: none;
+			color: black;
+		}
+	}
+	:first-child {
+		margin-right: auto;
+	}
+}
+
+.logo {
+	font-family: firaCode-bold;
+	font-size: x-large;
+	letter-spacing: 2px;
+}

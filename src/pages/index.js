@@ -5,13 +5,12 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
-const BlogIndex = ({ data, location }) => {
-  const siteTitle = data.site.siteMetadata?.title || `Title`
+const BlogIndex = ({ data }) => {
   const posts = data.allMarkdownRemark.nodes
 
   if (posts.length === 0) {
     return (
-      <Layout location={location} title={siteTitle}>
+      <Layout>
         <Bio />
         <p>
           No blog posts found. Add markdown posts to "content/blog" (or the
@@ -23,7 +22,7 @@ const BlogIndex = ({ data, location }) => {
   }
 
   return (
-    <Layout location={location} title={siteTitle}>
+    <Layout>
       <Bio />
       <ol style={{ listStyle: `none` }}>
         {posts.map(post => {
@@ -72,11 +71,6 @@ export const Head = () => <Seo title="All posts" />
 
 export const pageQuery = graphql`
   query {
-    site {
-      siteMetadata {
-        title
-      }
-    }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
       nodes {
         excerpt

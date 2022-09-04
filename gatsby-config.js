@@ -11,8 +11,19 @@ module.exports = {
     social: {
       github: "samya-ak",
     },
+    menuLinks: [
+      {
+        name: "Home",
+        link: `/`,
+      },
+      {
+        name: "About",
+        link: `/about`
+      }
+    ]
   },
   plugins: [
+    `gatsby-plugin-sass`,
     `gatsby-plugin-image`,
     {
       resolve: `gatsby-source-filesystem`,
