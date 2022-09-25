@@ -1,13 +1,13 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
+import _ from "lodash"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import _ from "lodash";
 
-const BlogIndex = ({ data }) => {
-  const posts = data.allMarkdownRemark.nodes
+const SubjectIndex = ({ data, pageContext }) => {
+  const posts = data.allMarkdownRemark.edges
 
   if (posts.length === 0) {
     return (
@@ -26,7 +26,7 @@ const BlogIndex = ({ data }) => {
     <Layout>
       <Bio />
       <ol style={{ listStyle: `none` }}>
-        {posts.map(post => {
+        {posts.map(({node:post}) => {
           const title = post.frontmatter.title || post.fields.slug
 
           return (
@@ -73,7 +73,7 @@ const BlogIndex = ({ data }) => {
   )
 }
 
-export default BlogIndex
+export default SubjectIndex
 
 /**
  * Head export to define metadata for the page
@@ -83,18 +83,26 @@ export default BlogIndex
 export const Head = () => <Seo title="All posts" />
 
 export const pageQuery = graphql`
-  query {
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-      nodes {
-        excerpt
-        fields {
-          slug
-        }
-        frontmatter {
-          date(formatString: "MMMM DD, YYYY")
-          title
-          description
-          subject
+  query ($subject: String!, $skip: Int!, $limit: Int!) {
+    allMarkdownRemark(
+      filter: { frontmatter: { subject: { in: [$subject] } } }
+      sort: { fields: [frontmatter___date], order: DESC }
+      skip: $skip
+      limit: $limit
+    ) {
+      edges {
+        node {
+					id
+          excerpt
+          fields {
+            slug
+          }
+          frontmatter {
+            date(formatString: "MMMM DD, YYYY")
+            title
+            description
+            subject
+          }
         }
       }
     }

@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import * as styles from "./header.module.scss"
 
 const Header = ({ title, menuLinks }) => (
-  <header className={styles.header}>
+  <header>
     <div className={styles.nav}>
       <ul>
         <li className={styles.logo}>

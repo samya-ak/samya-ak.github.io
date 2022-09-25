@@ -1,12 +1,14 @@
 const path = require(`path`)
+const _ = require(`lodash`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
+const { paginate } = require(`gatsby-awesome-pagination`)
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
   // Define a template for blog post
   const blogPost = path.resolve(`./src/templates/blog-post.js`)
-
+  const subjects = path.resolve(`./src/templates/subjects.js`)
   // Get all markdown blog posts sorted by date
   const result = await graphql(
     `
@@ -19,6 +21,14 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             id
             fields {
               slug
+            }
+          }
+        }
+        taxQuery: allMarkdownRemark {
+          group(field: frontmatter___subject) {
+            fieldValue
+            nodes {
+              id
             }
           }
         }
@@ -56,6 +66,27 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       })
     })
   }
+
+  // Create your paginated pages
+  paginate({
+    createPage, // The Gatsby `createPage` function
+    items: posts, // An array of objects
+    itemsPerPage: 2, // How many items you want per page
+    pathPrefix: "/", // Creates pages like `/blog`, `/blog/2`, etc
+    component: blogPost, // Just like `createPage()`
+  })
+
+  const taxonomies = result.data.taxQuery.group
+  taxonomies.map(({ nodes: posts, fieldValue }) => {
+    paginate({
+      createPage, // The Gatsby `createPage` function
+      items: posts, // An array of objects
+      itemsPerPage: 2, // How many items you want per page
+      pathPrefix: `/subjects/${_.kebabCase(fieldValue)}`, // Creates pages like `/blog`, `/blog/2`, etc
+      component: subjects, // Just like `createPage()`
+      context: { subject: fieldValue },
+    })
+  })
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
@@ -106,6 +137,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       title: String
       description: String
       date: Date @dateformat
+      subject: [String]
     }
 
     type Fields {
