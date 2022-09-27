@@ -4,7 +4,7 @@ module.exports = {
     title: `samya-ak`,
     author: {
       name: `Samyak Maharjan`,
-      summary: `who lives in Nepal.`,
+      summary: ``,
     },
     description: `Playling with gatsby`,
     siteUrl: `https://www.samya-ak.github.io`,

@@ -67,13 +67,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     })
   }
 
-  // Create your paginated pages
+  // Create paginated pages
   paginate({
     createPage, // The Gatsby `createPage` function
     items: posts, // An array of objects
     itemsPerPage: 2, // How many items you want per page
     pathPrefix: "/", // Creates pages like `/blog`, `/blog/2`, etc
-    component: blogPost, // Just like `createPage()`
+    component: path.resolve(`./src/pages/index.js`), // Just like `createPage()`
   })
 
   const taxonomies = result.data.taxQuery.group

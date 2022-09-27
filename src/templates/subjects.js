@@ -5,6 +5,7 @@ import _ from "lodash"
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import Pagination from "../components/Pagination"
 
 const SubjectIndex = ({ data, pageContext }) => {
   const posts = data.allMarkdownRemark.edges
@@ -69,6 +70,7 @@ const SubjectIndex = ({ data, pageContext }) => {
           )
         })}
       </ol>
+      <Pagination pageContext={pageContext} />
     </Layout>
   )
 }

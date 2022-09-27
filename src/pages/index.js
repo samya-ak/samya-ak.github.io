@@ -4,9 +4,10 @@ import { Link, graphql } from "gatsby"
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import _ from "lodash";
+import _ from "lodash"
+import Pagination from "../components/Pagination"
 
-const BlogIndex = ({ data }) => {
+const BlogIndex = ({ data, pageContext }) => {
   const posts = data.allMarkdownRemark.nodes
 
   if (posts.length === 0) {
@@ -69,6 +70,7 @@ const BlogIndex = ({ data }) => {
           )
         })}
       </ol>
+      <Pagination pageContext={pageContext} />
     </Layout>
   )
 }
@@ -83,8 +85,12 @@ export default BlogIndex
 export const Head = () => <Seo title="All posts" />
 
 export const pageQuery = graphql`
-  query {
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+  query ($skip: Int!, $limit: Int!) {
+    allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+      skip: $skip
+      limit: $limit
+    ) {
       nodes {
         excerpt
         fields {
