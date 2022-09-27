@@ -43,9 +43,8 @@ const BlogIndex = ({ data, pageContext }) => {
                       <span itemProp="headline">{title}</span>
                     </Link>
                   </h2>
-                  <small>{post.frontmatter.date}</small>
-                  <div>
-                    Filed under:{" "}
+                  <small>{post.frontmatter.date}</small><br/>
+                  <small>
                     {post.frontmatter.subject.map((subject, index) => [
                       index > 0 && ", ",
                       <Link
@@ -55,7 +54,7 @@ const BlogIndex = ({ data, pageContext }) => {
                         {subject}
                       </Link>,
                     ])}
-                  </div>
+                  </small>
                 </header>
                 <section>
                   <p

@@ -54,9 +54,9 @@
   --fontSize-5: 2.074rem;
   --fontSize-6: 2.488rem;
   --fontSize-7: 2.986rem;
-  --color-primary: #005b99;
+  --color-primary: #000;
   --color-text: #2e353f;
-  --color-text-light: #4f5969;
+  --color-text-light: #C0C0C0;
   --color-heading: #1a202c;
   --color-heading-black: black;
   --color-accent: #d1dce5;
@@ -229,8 +229,30 @@ table thead tr th {
 
 /* Link */
 
+.highlight {
+  color: var(--color-primary);
+  text-decoration: none;
+  background:
+     linear-gradient(
+       to bottom,
+       rgba(0, 0, 0, 0.2) 0%,
+       rgba(0, 0, 0, 0.2) 100%
+     );
+  background-position: 0 100%;
+  background-repeat: repeat-x;
+  background-size: 4px 4px;
+  transition: background-size .2s;
+  &:hover {
+    background-size: 50% 50%;
+  }
+}
+
 a {
   color: var(--color-primary);
+  text-decoration: none;
+  &:hover {
+    font-weight: bold;
+  }
 }
 
 a:hover,

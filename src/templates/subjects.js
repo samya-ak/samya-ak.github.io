@@ -27,7 +27,7 @@ const SubjectIndex = ({ data, pageContext }) => {
     <Layout>
       <Bio />
       <ol style={{ listStyle: `none` }}>
-        {posts.map(({node:post}) => {
+        {posts.map(({ node: post }) => {
           const title = post.frontmatter.title || post.fields.slug
 
           return (
@@ -43,9 +43,8 @@ const SubjectIndex = ({ data, pageContext }) => {
                       <span itemProp="headline">{title}</span>
                     </Link>
                   </h2>
-                  <small>{post.frontmatter.date}</small>
-                  <div>
-                    Filed under:{" "}
+                  <small>{post.frontmatter.date}</small><br/>
+                  <small>
                     {post.frontmatter.subject.map((subject, index) => [
                       index > 0 && ", ",
                       <Link
@@ -55,7 +54,7 @@ const SubjectIndex = ({ data, pageContext }) => {
                         {subject}
                       </Link>,
                     ])}
-                  </div>
+                  </small>
                 </header>
                 <section>
                   <p
@@ -94,7 +93,7 @@ export const pageQuery = graphql`
     ) {
       edges {
         node {
-					id
+          id
           excerpt
           fields {
             slug
