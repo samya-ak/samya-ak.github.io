@@ -18,13 +18,21 @@ module.exports = {
       },
       {
         name: "About",
-        link: `/about`
-      }
-    ]
+        link: `/about`,
+      },
+    ],
   },
   plugins: [
     `gatsby-plugin-sass`,
     `gatsby-plugin-image`,
+    {
+      resolve: "gatsby-plugin-react-svg",
+      options: {
+        rule: {
+          include: /images/,
+        },
+      },
+    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {

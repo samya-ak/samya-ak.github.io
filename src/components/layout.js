@@ -1,31 +1,40 @@
 import * as React from "react"
 import Header from "./header"
-import { useStaticQuery, graphql} from "gatsby"
-
+import { useStaticQuery, graphql, Link } from "gatsby"
+import Github from "../images/github.svg"
+import LinkedIn from "../images/linkedin.svg"
 const Layout = ({ children }) => {
-  const {site} = useStaticQuery(
+  const { site } = useStaticQuery(
     graphql`
-      query { 
+      query {
         site {
-        siteMetadata {
-          title
-          menuLinks {
-            name 
-            link
+          siteMetadata {
+            title
+            menuLinks {
+              name
+              link
+            }
           }
-        }   
+        }
       }
-    }
     `
   )
-  const title = site.siteMetadata.title;
-  const menuLinks = site.siteMetadata.menuLinks;
+  const title = site.siteMetadata.title
+  const menuLinks = site.siteMetadata.menuLinks
 
   return (
     <div className="global-wrapper">
       <Header title={title} menuLinks={menuLinks} />
       <main>{children}</main>
-      <footer>© {new Date().getFullYear()} </footer>
+      <footer>
+        <Link to="https://www.linkedin.com/in/samya-ak" target="_blank">
+          <LinkedIn className="social-icon" />
+        </Link>{" "}
+        <Link to="https://www.github.com/samya-ak" target="_blank">
+          <Github className="social-icon" />
+        </Link>{" "}
+        © {new Date().getFullYear()}{" "}
+      </footer>
     </div>
   )
 }
