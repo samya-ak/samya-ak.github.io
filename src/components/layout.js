@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
         <Link to="https://www.github.com/samya-ak" target="_blank">
           <Github className="social-icon" />
         </Link>{" "}
-        © {new Date().getFullYear()}{" "}
+       <span>© </span> <span>{new Date().getFullYear()}</span>{" "}
       </footer>
     </div>
   )
