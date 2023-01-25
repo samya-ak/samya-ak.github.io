@@ -313,6 +313,10 @@ a:focus {
   margin-bottom: var(--spacing-16);
 }
 
+.footer-bio {
+  display: flex;
+}
+
 .bio p {
   margin-bottom: var(--spacing-0);
 }
@@ -378,13 +382,13 @@ a:focus {
 }
 
 footer {
+  display: flex;
+  a {
     display: flex;
-    a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    & > * {
-        margin-right: 9px;
-    }
+    justify-content: center;
+    align-items: center;
+  }
+  & > * {
+    margin-right: 9px;
+  }
 }
