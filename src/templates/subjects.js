@@ -2,7 +2,6 @@ import * as React from "react"
 import { Link, graphql } from "gatsby"
 import _ from "lodash"
 
-import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import Pagination from "../components/Pagination"
@@ -13,7 +12,6 @@ const SubjectIndex = ({ data, pageContext }) => {
   if (posts.length === 0) {
     return (
       <Layout>
-        <Bio />
         <p>
           No blog posts found. Add markdown posts to "content/blog" (or the
           directory you specified for the "gatsby-source-filesystem" plugin in
@@ -25,7 +23,6 @@ const SubjectIndex = ({ data, pageContext }) => {
 
   return (
     <Layout>
-      <Bio />
       <ol style={{ listStyle: `none` }}>
         {posts.map(({ node: post }) => {
           const title = post.frontmatter.title || post.fields.slug
@@ -43,7 +40,8 @@ const SubjectIndex = ({ data, pageContext }) => {
                       <span itemProp="headline">{title}</span>
                     </Link>
                   </h2>
-                  <small>{post.frontmatter.date}</small><br/>
+                  <small>{post.frontmatter.date}</small>
+                  <br />
                   <small>
                     {post.frontmatter.subject.map((subject, index) => [
                       index > 0 && ", ",

@@ -35,18 +35,21 @@ const AboutPage = ({ location }) => (
       <div className={styles.row}>
         <div className={styles.column}>
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/futsal.png"
             quality={95}
             alt="futsal"
           />
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/guitar.png"
             quality={95}
             alt="guitar"
           />
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/dog.png"
             quality={95}
@@ -55,18 +58,21 @@ const AboutPage = ({ location }) => (
         </div>
         <div className={styles.column}>
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/tt.png"
             quality={95}
             alt="tt"
           />
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/mountains.png"
             quality={95}
             alt="mountains"
           />
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/music.png"
             quality={95}
@@ -75,6 +81,7 @@ const AboutPage = ({ location }) => (
         </div>
         <div className={styles.column}>
           <StaticImage
+            className={styles.imgMargin}
             formats={["png"]}
             src="../images/mug.png"
             quality={95}

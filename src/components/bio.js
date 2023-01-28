@@ -31,7 +31,7 @@ const Bio = ({ type }) => {
   const social = data.site.siteMetadata?.social
 
   return (
-    <div className={type == "footer" ? "footer-bio" : "bio"}>
+    <div className={type === "footer" ? "footer-bio" : "bio"}>
       <StaticImage
         className="bio-avatar"
         layout="fixed"
@@ -47,7 +47,7 @@ const Bio = ({ type }) => {
           Written by <strong>{author.name}</strong> {author?.summary || null}
           {` `}
           <a href={`https://github.com/${social?.github || ``}`}>
-            You should follow him on GitHub.
+            You should follow him on GitHub
           </a>
         </p>
       )}

@@ -25,6 +25,7 @@ const Layout = ({ children }) => {
   return (
     <div className="global-wrapper">
       <Header title={title} menuLinks={menuLinks} />
+      <hr />
       <main>{children}</main>
       <footer>
         <Link to="https://www.linkedin.com/in/samya-ak" target="_blank">
@@ -33,7 +34,7 @@ const Layout = ({ children }) => {
         <Link to="https://www.github.com/samya-ak" target="_blank">
           <Github className="social-icon" />
         </Link>{" "}
-       <span>© </span> <span>{new Date().getFullYear()}</span>{" "}
+        <span>© </span> <span>{new Date().getFullYear()}</span>{" "}
       </footer>
     </div>
   )
