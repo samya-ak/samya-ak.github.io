@@ -53,9 +53,7 @@ module.exports = {
         plugins: [
           {
             resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 630,
-            },
+            options: {},
           },
           {
             resolve: `gatsby-remark-responsive-iframe`,
@@ -65,11 +63,7 @@ module.exports = {
           },
           {
             resolve: `gatsby-remark-prismjs`,
-            options: {
-              css: `code[class*="language-"],pre[class*="language-"] {
-                font-size: 1rem !important;
-              }`,
-            },
+            options: {},
           },
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
