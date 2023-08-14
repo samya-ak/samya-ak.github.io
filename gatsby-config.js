@@ -26,6 +26,12 @@ module.exports = {
     `gatsby-plugin-sass`,
     `gatsby-plugin-image`,
     {
+      resolve: "@vercel/gatsby-plugin-vercel-analytics",
+      options: {
+        default: false,
+      },
+    },
+    {
       resolve: "gatsby-plugin-react-svg",
       options: {
         rule: {
