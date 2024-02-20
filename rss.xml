@@ -1,4 +1,263 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Playling with gatsby]]></description><link>https://www.samya-ak.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 01 Oct 2023 12:52:12 GMT</lastBuildDate><item><title><![CDATA[Convert UTC time to time in a timezone]]></title><description><![CDATA[Let’s say you’ve stored utc time in db with a format like “17:30:00+00”. You want to convert this time in utc to time in a certain timezone…]]></description><link>https://www.samya-ak.github.io/utc-timezone-time-conversion/</link><guid isPermaLink="false">https://www.samya-ak.github.io/utc-timezone-time-conversion/</guid><pubDate>Sun, 01 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Let’s say you’ve stored utc time in db with a format like “17:30:00+00”. You want to convert this time in utc to time in a certain timezone.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Playling with gatsby]]></description><link>https://www.samya-ak.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 20 Feb 2024 13:07:24 GMT</lastBuildDate><item><title><![CDATA[Manage dotfiles using stow]]></title><description><![CDATA[The Problem I’ve got my personal machine and work machine. They both share somewhat same dotfiles - configurations that allow me to…]]></description><link>https://www.samya-ak.github.io/stow/</link><guid isPermaLink="false">https://www.samya-ak.github.io/stow/</guid><pubDate>Tue, 20 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h4&gt;The Problem&lt;/h4&gt;
+&lt;p&gt;I’ve got my personal machine and work machine. They both share somewhat same dotfiles - configurations that allow me to programme seamlessly.
+I’ve put these configurations in a git repo in ad hoc manner. Now when I have to setup my dev environment in new machine, I would clone this config repo
+and manually move each config file to the directory it belongs to. So, there’s always two copies of a config file in my machine (one in git repo and another
+in directory where it actually supposed to be). And when I need to update a config file, I need to update in two places for a machine. This is painful!&lt;/p&gt;
+&lt;h4&gt;The Solution: &lt;a href=&quot;https://github.com/aspiers/stow&quot;&gt;Stow&lt;/a&gt;&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Stow is a symlink farm manager program which takes distinct sets of software and/or data located in separate directories on the filesystem,
+and makes them all appear to be installed in a single directory tree.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;You need perl to install stow. You can install perl using &lt;a href=&quot;https://perlbrew.pl/Installation.html&quot;&gt;perlbrew&lt;/a&gt;.
+You can install stow following guidelines from &lt;a href=&quot;https://github.com/aspiers/stow/blob/master/INSTALL.md&quot;&gt;here&lt;/a&gt; or if you’re on mac, you can use homebrew.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; stow &lt;span class=&quot;token comment&quot;&gt;# Ubuntu&lt;/span&gt;
+
+brew &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; stow &lt;span class=&quot;token comment&quot;&gt;# Homebrew Mac&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Understanding directory structure&lt;/h4&gt;
+&lt;p&gt;By default, target destination of the stowed files is parent directory of stow directory (current directory by default).
+We can change target destination using following command&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;stow -t &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;target/path&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;PACKAGE&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;# stow -t ~ zsh&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To make things simpler, let’s place our &lt;code class=&quot;language-text&quot;&gt;dotfiles&lt;/code&gt; in &lt;code class=&quot;language-text&quot;&gt;$HOME&lt;/code&gt; directory.
+We will treat every directory inside &lt;code class=&quot;language-text&quot;&gt;dotfiles&lt;/code&gt; as &lt;code class=&quot;language-text&quot;&gt;$HOME&lt;/code&gt; directory.
+For example, &lt;code class=&quot;language-text&quot;&gt;.zshrc&lt;/code&gt; file resides in the path &lt;code class=&quot;language-text&quot;&gt;~&lt;/code&gt; i.e. home directory. So, you can directly put your &lt;code class=&quot;language-text&quot;&gt;.zshrc&lt;/code&gt; file in the directory let’s say &lt;code class=&quot;language-text&quot;&gt;dotfiles/zsh&lt;/code&gt;.
+And with the command &lt;code class=&quot;language-text&quot;&gt;stow zsh&lt;/code&gt;, a symlink to the &lt;code class=&quot;language-text&quot;&gt;.zshrc&lt;/code&gt; file is created at &lt;code class=&quot;language-text&quot;&gt;~&lt;/code&gt; directory.&lt;/p&gt;
+&lt;p&gt;Similarly, If you want symlink to be created at &lt;code class=&quot;language-text&quot;&gt;~/.config/nvim&lt;/code&gt;, you would create &lt;code class=&quot;language-text&quot;&gt;nvim/.config/nvim&lt;/code&gt; in dotfiles.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;stow -D &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;packagename&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# delete stowed package&lt;/span&gt;
+stow -R &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;packagename&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# restows package&lt;/span&gt;
+stow -h &lt;span class=&quot;token comment&quot;&gt;# for more commands&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Deleting stowed package doesn’t delete the file but only removes the symlink.&lt;/p&gt;
+&lt;h4&gt;Reference&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/samya-ak/dotfiles&quot;&gt;dotfiles&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Customizing keycloak]]></title><description><![CDATA[Reference keycloak customization Prerequisites Docker Keycloak localization Description This doc talks about how we can run  project in a…]]></description><link>https://www.samya-ak.github.io/keycloak-customization/</link><guid isPermaLink="false">https://www.samya-ak.github.io/keycloak-customization/</guid><pubDate>Tue, 20 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h4&gt;Reference&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/samya-ak/keycloak-customization&quot;&gt;keycloak customization&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;Prerequisites&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Keycloak localization&lt;/h3&gt;
+&lt;h4&gt;Description&lt;/h4&gt;
+&lt;p&gt;This doc talks about how we can run &lt;code class=&quot;language-text&quot;&gt;keycloak&lt;/code&gt; project in a docker container and add your custom themes to extend existing languages for localization, change stylesheets for existing keycloak pages etc. First thing that we need to understand is that, we will be copying our &lt;code class=&quot;language-text&quot;&gt;custom-theme&lt;/code&gt; in the &lt;code class=&quot;language-text&quot;&gt;themes&lt;/code&gt; directory of existing &lt;code class=&quot;language-text&quot;&gt;keycloak&lt;/code&gt; image using &lt;code class=&quot;language-text&quot;&gt;Dockerfile&lt;/code&gt;. The name of the directory becomes the name of the theme, &lt;code class=&quot;language-text&quot;&gt;custom-theme&lt;/code&gt; in our case.&lt;/p&gt;
+&lt;h4&gt;Procedure&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;To create a theme called &lt;code class=&quot;language-text&quot;&gt;custom-theme&lt;/code&gt;, create the directory &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme&lt;/code&gt;. Inside the theme directory, create a directory for each of the types your theme is going to provide.
+For example, to add the login type to the custom-theme theme, create the directory &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/login&lt;/code&gt;.
+For each type create a file &lt;code class=&quot;language-text&quot;&gt;theme.properties&lt;/code&gt; which allows setting some configuration for the theme.
+For example, to configure the theme &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/login&lt;/code&gt; to extend the base theme and import some common resources, create the file &lt;code class=&quot;language-text&quot;&gt;themes/mytheme/login/theme.properties&lt;/code&gt; with following contents:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;    parent=base
+    import=common/keycloak&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Create the file &lt;code class=&quot;language-text&quot;&gt;&amp;lt;THEME TYPE&gt;/messages/messages_&amp;lt;LOCALE&gt;.properties&lt;/code&gt; in the directory of your theme.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add this file to the locales property in &lt;THEME TYPE&gt;/theme.properties. For a language to be available to users the realms login, account and email, the theme has to support the language, so you need to add your language for those theme types.
+For example, to add Nepali translations to the &lt;code class=&quot;language-text&quot;&gt;custom-theme&lt;/code&gt; theme create the file &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/login/messages/messages_np.properties&lt;/code&gt; with the following content. If you omit a translation for messages, they will use English.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;    usernameOrEmail=इमेल
+    password=पस्स्वोर्ड&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;Edit themes/mytheme/login/theme.properties and add:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;    locales=en,np&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Add the same for the &lt;code class=&quot;language-text&quot;&gt;account&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;email&lt;/code&gt; theme types. To do this create &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/account/messages/messages_no.properties&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/email/messages/messages_no.properties&lt;/code&gt;. Leaving these files empty will result in the English messages being used.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Copy &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/login/theme.properties&lt;/code&gt; to &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/account/theme.properties&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/email/theme.properties&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add a translation for the language selector. This is done by adding a message to the English translation. To do this add the following to &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/account/messages/messages_en.properties&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/login/messages/messages_en.properties&lt;/code&gt;:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;    locale_np=नेपाली&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;8&quot;&gt;
+&lt;li&gt;Create a Dockerfile that extends existing keycloak project’s image. There’s a step that copies &lt;code class=&quot;language-text&quot;&gt;custom-theme&lt;/code&gt; to the working directory of keycloak&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;dockerfile&quot;&gt;&lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code class=&quot;language-dockerfile&quot;&gt;&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;FROM&lt;/span&gt; quay.io/keycloak/keycloak:latest &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt; builder&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# Enable health and metrics support&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ENV&lt;/span&gt; KC_HEALTH_ENABLED=true&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ENV&lt;/span&gt; KC_METRICS_ENABLED=true&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# Configure a database vendor&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ENV&lt;/span&gt; KC_DB=postgres&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;WORKDIR&lt;/span&gt; /opt/keycloak&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;# for demonstration purposes only, please make sure to use proper certificates in production instead&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;RUN&lt;/span&gt; keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname &lt;span class=&quot;token string&quot;&gt;&quot;CN=server&quot;&lt;/span&gt; -alias server -ext &lt;span class=&quot;token string&quot;&gt;&quot;SAN:c=DNS:localhost,IP:127.0.0.1&quot;&lt;/span&gt; -keystore conf/server.keystore&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;RUN&lt;/span&gt; /opt/keycloak/bin/kc.sh build&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;FROM&lt;/span&gt; quay.io/keycloak/keycloak:latest&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;COPY&lt;/span&gt; &lt;span class=&quot;token options&quot;&gt;&lt;span class=&quot;token property&quot;&gt;--from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;builder&lt;/span&gt;&lt;/span&gt; /opt/keycloak/ /opt/keycloak/&lt;/span&gt;
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;COPY&lt;/span&gt; custom-theme /opt/keycloak/themes/custom-theme&lt;/span&gt;
+
+&lt;span class=&quot;token instruction&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ENTRYPOINT&lt;/span&gt; [&lt;span class=&quot;token string&quot;&gt;&quot;/opt/keycloak/bin/kc.sh&quot;&lt;/span&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;9&quot;&gt;
+&lt;li&gt;Use this Dockerfile in &lt;code class=&quot;language-text&quot;&gt;docker-compose.yml&lt;/code&gt; with a service called keycloak like&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;3.7&quot;&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;postgres&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres_container
+    &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;15&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;POSTGRES_USER&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres
+      &lt;span class=&quot;token key atrule&quot;&gt;POSTGRES_PASSWORD&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres
+      &lt;span class=&quot;token key atrule&quot;&gt;POSTGRES_DB&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; keycloak
+      &lt;span class=&quot;token key atrule&quot;&gt;PGDATA&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; /data/postgres
+    &lt;span class=&quot;token key atrule&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; postgres&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;/data/postgres
+    &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;5432:5432&quot;&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; unless&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;stopped
+
+  &lt;span class=&quot;token key atrule&quot;&gt;keycloak&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; .
+      &lt;span class=&quot;token key atrule&quot;&gt;dockerfile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Dockerfile
+    &lt;span class=&quot;token key atrule&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;KC_DB&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres
+      &lt;span class=&quot;token key atrule&quot;&gt;KC_DB_URL&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; jdbc&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;postgresql&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;//postgres/keycloak
+      &lt;span class=&quot;token key atrule&quot;&gt;KC_DB_USERNAME&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres
+      &lt;span class=&quot;token key atrule&quot;&gt;KC_DB_PASSWORD&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; postgres
+      &lt;span class=&quot;token key atrule&quot;&gt;KEYCLOAK_ADMIN&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; admin
+      &lt;span class=&quot;token key atrule&quot;&gt;KEYCLOAK_ADMIN_PASSWORD&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; admin
+    &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; 7777&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8080&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; postgres
+    &lt;span class=&quot;token key atrule&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; start&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;dev
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;spi&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;theme&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;static&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;max&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;age=&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;spi&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;theme&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;cache&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;themes=false
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;spi&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;theme&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;cache&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;templates=false
+
+&lt;span class=&quot;token key atrule&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  postgres&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;10&quot;&gt;
+&lt;li&gt;Finally run &lt;code class=&quot;language-text&quot;&gt;docker compose up --build&lt;/code&gt; to start the keycloak server&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4&gt;References&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/keycloak/keycloak/tree/main/themes/src/main/resources/theme/base&quot;&gt;Keycloak base theme source code&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.keycloak.org/docs/23.0.6/server_development/#adding-a-language-to-a-realm&quot;&gt;Adding a language to a realm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.keycloak.org/docs/23.0.6/server_development/#add-a-stylesheet-to-a-theme&quot;&gt;Adding a stylesheet to a theme&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/samya-ak/keycloak-localization/tree/main&quot;&gt;Final result of above instructions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Keycloak emails&lt;/h3&gt;
+&lt;h4&gt;Description&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Keycloak sends emails to users&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;to verify their email address&lt;/li&gt;
+&lt;li&gt;when they forget their passwords&lt;/li&gt;
+&lt;li&gt;when an admin needs to receive notifications about a server event&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We can setup SMTP in keycloak by following instructions from &lt;a href=&quot;https://wjw465150.gitbooks.io/keycloak-documentation/content/server_admin/topics/realms/email.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Keycloak doesn’t send out mails immediately when a user is created. And also this depends if you have the email verification enabled. You can do this in two ways: In Realm Settings → Login → Verify Email or with the Required Action “Verify Email”.
+Both approaches will send an email to the user, if the user is not marked as “email verified” and is just trying to login. Required actions are fired at the end of an authentication flow and must be successfully solved, before.a user is completely authenticated.
+Keycloak has no thing like “invitation” which will be sent when the user has been created and tell the user “hey, you have just been created, please do… whatever you expect”
+But you can use the admin API right after creating a user to send a “credential reset” email with several required actions in it.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mr. KeyCloak &lt;a href=&quot;https://keycloak.discourse.group/t/does-creating-a-new-user-via-api-send-a-confirmation-email/20646/4&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h4&gt;Customizing email templates&lt;/h4&gt;
+&lt;p&gt;To edit the subject and contents for emails, for example email verification email, add a message bundle to the email type of your theme. There are three messages for each email. One for the subject, one for the plain text body and one for the html body.&lt;/p&gt;
+&lt;p&gt;To see all emails available take a look at &lt;a href=&quot;https://github.com/keycloak/keycloak/blob/main/themes/src/main/resources/theme/base/email/messages/messages_en.properties&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For example to change the email verification email for the &lt;code class=&quot;language-text&quot;&gt;custom-them&lt;/code&gt; theme create &lt;code class=&quot;language-text&quot;&gt;themes/custom-theme/email/messages/messages_en.properties&lt;/code&gt; with the following content:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;emailVerificationSubject=Verify email custom subject
+emailVerificationBody=Someone has created a {2} account with this email address. If this was you, click the link below to verify your email address\n\n{0}\n\nThis link will expire within {3}.\n\nIf you didn&apos;&apos;t create this account, just ignore this message.
+emailVerificationBodyHtml=&amp;lt;p&gt;Someone has created a {2} account with this email address. If this was you, click the link below to verify your email address&amp;lt;/p&gt;&amp;lt;p&gt;&amp;lt;a href=&quot;{0}&quot;&gt;Link to e-mail address verification&amp;lt;/a&gt;&amp;lt;/p&gt;&amp;lt;p&gt;This link will expire within {3}.&amp;lt;/p&gt;&amp;lt;p&gt;If you didn&apos;&apos;t create this account, just ignore this message lol.&amp;lt;/p&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Reference&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.keycloak.org/docs/23.0.6/server_development/#emails&quot;&gt;Emails docs&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Database configuration&lt;/h3&gt;
+&lt;h4&gt;Description&lt;/h4&gt;
+&lt;p&gt;If you run keycloak in docker with command like&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;docker&lt;/span&gt; run -p &lt;span class=&quot;token number&quot;&gt;8080&lt;/span&gt;:8080 -e &lt;span class=&quot;token assign-left variable&quot;&gt;KEYCLOAK_ADMIN&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;admin -e &lt;span class=&quot;token assign-left variable&quot;&gt;KEYCLOAK_ADMIN_PASSWORD&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;admin quay.io/keycloak/keycloak:23.0.6 start-dev&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;it uses default database.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;By default, the server uses the dev-file database. This is the default database that the server will use to persist data and only exists for development use-cases.
+The dev-file database is not suitable for production use-cases, and must be replaced before deploying to production.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here, dev-file denotes the use of the &lt;a href=&quot;https://www.h2database.com/html/main.html&quot;&gt;H2&lt;/a&gt; db internally. So, data will not persist on every restart of keycloak server.&lt;/p&gt;
+&lt;p&gt;For more fluent developer experience, we can use database like postgres to persist data. We can do this by using configuration like:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;docker-compose&quot;&gt;&lt;pre class=&quot;language-docker-compose&quot;&gt;&lt;code class=&quot;language-docker-compose&quot;&gt;  keycloak:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - 7777:8080
+    depends_on:
+      - postgres
+    command:
+      - start-dev
+      - --spi-theme-static-max-age=-1
+      - --spi-theme-cache-themes=false
+      - --spi-theme-cache-templates=false&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;In-built supported databases and their tested versions.&lt;/h5&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Database&lt;/th&gt;
+&lt;th&gt;Option value&lt;/th&gt;
+&lt;th&gt;Tested version&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;MariaDB Server&lt;/td&gt;
+&lt;td&gt;mariadb&lt;/td&gt;
+&lt;td&gt;10.11&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Microsoft SQL Server&lt;/td&gt;
+&lt;td&gt;mssql&lt;/td&gt;
+&lt;td&gt;2022&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MySQL&lt;/td&gt;
+&lt;td&gt;mysql&lt;/td&gt;
+&lt;td&gt;8.0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Oracle Database&lt;/td&gt;
+&lt;td&gt;oracle&lt;/td&gt;
+&lt;td&gt;19.3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PostgreSQL&lt;/td&gt;
+&lt;td&gt;postgres&lt;/td&gt;
+&lt;td&gt;15&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5&gt;Mongo Support&lt;/h5&gt;
+&lt;p&gt;The latest version of keycloak doesn’t support nosql databases. You can read more about it &lt;a href=&quot;https://lists.jboss.org/pipermail/keycloak-user/2017-February/009417.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h5&gt;Should you share Keycloak db schema with your application’s db schema?&lt;/h5&gt;
+&lt;p&gt;Technically you can but, it “produces very tight coupling between the app and the authentication provider while they are intended to be two very distinct instances.”
+Ideally, you would use a single db but with different schemas for keycloak and your application.&lt;/p&gt;
+&lt;h4&gt;References&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/keycloak/keycloak/issues/22231#issuecomment-1689699362&quot;&gt;On H2 db&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.keycloak.org/server/db&quot;&gt;Configuring the database&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://keycloak.discourse.group/t/keycloak-db-or-using-custom-db-when-creating-project-from-scratch/23241/4&quot;&gt;Sharing keycloak and application db&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://keycloak.discourse.group/t/risks-of-running-a-shared-database-between-keycloak-and-application-s/7344/2&quot;&gt;Sharing keycloak and application db2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Convert UTC time to time in a timezone]]></title><description><![CDATA[Let’s say you’ve stored utc time in db with a format like “17:30:00+00”. You want to convert this time in utc to time in a certain timezone…]]></description><link>https://www.samya-ak.github.io/utc-timezone-time-conversion/</link><guid isPermaLink="false">https://www.samya-ak.github.io/utc-timezone-time-conversion/</guid><pubDate>Sun, 01 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Let’s say you’ve stored utc time in db with a format like “17:30:00+00”. You want to convert this time in utc to time in a certain timezone.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;	timeonly &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;17:30:00+00&quot;&lt;/span&gt;
 	layout &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;15:04:05-07&quot;&lt;/span&gt;
 	tz&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; time&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;LoadLocation&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;America/Los_Angeles&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
