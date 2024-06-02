@@ -1,4 +1,344 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Playling with gatsby]]></description><link>https://www.samya-ak.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 22 Feb 2024 13:31:24 GMT</lastBuildDate><item><title><![CDATA[Amend an old commit in git]]></title><description><![CDATA[Premise If you wanted to amend the latest commit, you would just do  to already staged files.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Playling with gatsby]]></description><link>https://www.samya-ak.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 02 Jun 2024 13:50:52 GMT</lastBuildDate><item><title><![CDATA[Designing a bursty a rate limiter]]></title><description><![CDATA[Introduction “A rate limiter caps how many requests a sender can issue in a specific time window. It then blocks requests once the cap is…]]></description><link>https://www.samya-ak.github.io/rate-limiter/</link><guid isPermaLink="false">https://www.samya-ak.github.io/rate-limiter/</guid><pubDate>Sun, 02 Jun 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h4&gt;Introduction&lt;/h4&gt;
+&lt;p&gt;“A rate limiter caps how many requests a sender can issue in a specific time window. It then blocks requests once the cap is reached.”&lt;/p&gt;
+&lt;p&gt;Some major reasons why we need rate limiting:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To protect against misbehaving clients, DOS attacks, bruteforce attempts etc.&lt;/li&gt;
+&lt;li&gt;Encourages developers to follow good coding practices&lt;/li&gt;
+&lt;li&gt;Helps keep resource cost under control&lt;/li&gt;
+&lt;li&gt;To increase availability of service for everyone&lt;/li&gt;
+&lt;li&gt;Could be a revenue tactic for some services&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;System Architecture&lt;/h4&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 650px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/97e9ed33c6177fce73e737799c16af98/c230a/hl.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 58.282208588957054%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAC4jAAAuIwF4pT92AAACMklEQVQoz1WTS2/TQBRG+edskFiwYMsvoKyLKCoqIApqBWnT5uk2cZPYqRvHnhnPw48ukA7ymPSx+DT3juwz371z54WxJWVVs0lz9g+O2GxzlHKowiALg1AGVVifF9p67fJHWZTu9l60wLq5J1zGvHz9lmh9x+H7FetY0lSO2jkPLgpDJrWXUPoZUCqDkAW5UB3QusqfXFaNj9dxRl3WfL3a8HmckBWOKLdMk4JpollsDRvpSAvHtnBIXXqHLfQB2NpuocaUFMby977h3a8bXh0GDNeS4/6KfrDiIgjpT+aMFxEfj2P2DiKEdf7/vAVWTf0faDBVjW2aLnYViTAEiWIc55xcXNMLFlzMl/wehwxu1vwcxByehOTaeTPe4emXBNf2qaxITieIH0NkWaK1Jco0l8uMy0XKIEr5drZm//sd0zvF2SxhFGdME0kq7SPw/DTEupLClkSjOaveBGm6G40zQ38lGCy3TG8FR39CPnwaMoq23SHLLcNIkKonQFc7XFn7ppq6wTT3XT+NI8oMg6uQcZQxWSvOZxG9YM4oFkxuFeO19PEz4CxcYVyJzCQq2aCTDTLNKNKM2WzF2d4b+sGMXrTl/DricnLNMJbeWatB6/BpycNx0CVCIYVCyQIhpJ+7JM2ZzFdEqSSR1q9hvOE20yTC+ktrJXV3yx7Yzl5bsh8ZWz2U35asTTdS2scO08qWD/lOu1fybA47y9pPvVTaq30R7UdiF/v8yfpUSpOLgn9G53m2Fr8elAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;High level architecture diagram&quot;
+        title=&quot;High-level-architecture-diagram&quot;
+        src=&quot;/static/97e9ed33c6177fce73e737799c16af98/a6d36/hl.png&quot;
+        srcset=&quot;/static/97e9ed33c6177fce73e737799c16af98/222b7/hl.png 163w,
+/static/97e9ed33c6177fce73e737799c16af98/ff46a/hl.png 325w,
+/static/97e9ed33c6177fce73e737799c16af98/a6d36/hl.png 650w,
+/static/97e9ed33c6177fce73e737799c16af98/e548f/hl.png 975w,
+/static/97e9ed33c6177fce73e737799c16af98/3c492/hl.png 1300w,
+/static/97e9ed33c6177fce73e737799c16af98/c230a/hl.png 2059w&quot;
+        sizes=&quot;(max-width: 650px) 100vw, 650px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Fig: Rate limiter using Token bucket algorithm&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 650px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/2ca16734318ef40bfa9750465edaefbc/11d70/cd1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 74.23312883435584%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAACe0lEQVQ4y51UTU9TQRRlpf4CE1i6Mv4B3Wj8B5q40bhxg+LSKMYFS1e6UDcIJsSFGhEbKeUrwUQoAkrUCg0CfdRSoB+0PGn7XvvefB8z0w+pTYjxJifvzryZk3PvPZk2z/OQy+WQz+dg7+VBCAFjDJRSg7/z+vrgfn2t77YRyqCjp28Mj15Pm1xKhf8JIQTadNL3bh7Hzt3B0bO3EfiwVPspoZT6Z+jgnFcJB6e+4tK9AVzofob3i+sthELKBrT6Qwkdx4HgFMViAV6l0pAuawRKyZbSpCFuhSF0XRc7qTSSW9tIZ7IoOU7TZSoUviX2DT5ZNrIF3+zXVdVDrw0h5wLhj3MIjU0gGBrD7PyCmVahWIRXcRFN7uH49RA6bo7iyNUAHk9Y1fIOtKSJkDKGzfgGrGgEseUIUom4ISSE6mNgPkX/ZAwPhn+gZzBqVB50QgshpEBk10X/Uhb937MIWjaMlZRCOF3Bq1gBwaSLtRJtKq/+bSWExN25DNoH1nDypYXTQ3G4lEMwioujCZx6sY4Tz1dxbWrLXGRCGuVCKghVQ23yhlAJjqRDEYrl8TaaQiTnod7u1V8ewjuOQbxIDne1UmBVhQozK7vo7F1EZ+9nPAyuAUoAkmM2TRGIUwz/pBjfJND9JpRCt2nI2kf3XMbgadQ2Pf1j7IVtdHSNoP3GCK48WQCnPhT10btcRud0CV0zDu5/ceG45aqtqI9b4R2ceWPhfGADlyeToEJCVG3DkNq1sZK0YWUcZAteo4oCkUiXBTJlAdtvNrjPJZIlgkSRwKHC9NUo1K8N8X1A6slyKMFqtiFmMIpXITlt7GtwRgHBDPQ5/eLo1+Y35Y9dOjkHzkgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Container diagram&quot;
+        title=&quot;Container-diagram&quot;
+        src=&quot;/static/2ca16734318ef40bfa9750465edaefbc/a6d36/cd1.png&quot;
+        srcset=&quot;/static/2ca16734318ef40bfa9750465edaefbc/222b7/cd1.png 163w,
+/static/2ca16734318ef40bfa9750465edaefbc/ff46a/cd1.png 325w,
+/static/2ca16734318ef40bfa9750465edaefbc/a6d36/cd1.png 650w,
+/static/2ca16734318ef40bfa9750465edaefbc/e548f/cd1.png 975w,
+/static/2ca16734318ef40bfa9750465edaefbc/3c492/cd1.png 1300w,
+/static/2ca16734318ef40bfa9750465edaefbc/11d70/cd1.png 1802w&quot;
+        sizes=&quot;(max-width: 650px) 100vw, 650px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Fig: Container diagram for rate limiter&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 650px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/666fd4aff90670bef50b942709b30e21/fa60d/cd2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 47.239263803680984%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAABYlAAAWJQFJUiTwAAABnUlEQVQoz4WSy2tUMRTG5y91IS4UcalduHLvriKIC/eKWIs7pT5gOtIiWKWVMg+w+KiF6czc3JvHSU5+cnNnxurGwJeTnJDz+r6ec45FVTFfdAgipJT+i5gSEv+g9YUQ6IkIYg3SVAWgZLqVcyZpRlubO1v86/0iQCTS8yHweBR4cOi4/9nxbOwgK0mVrPr3p6W/PU/mkc2DhoeHttj2TpIu4L1PDbcHho1+xaMju85Y+cTWxLM98TwZOr5MhdU6Phc2+oY7e4ZbfcNR+6aRXtv34Gdge2x5Pmr4cCbEKARbczJzXN2Zc/1txaWXC7aGBvUN4h0/6sTToeXFuC5dTV1CY6lQuPvRceOd4dqbis2Dmugt1lqiZk7qzHihDGeRudcy+Owb9k4Dl1/X3NytubJTMZpFUKHnvGf/ZM7ud8f7U+H4PLZslLa8c4itIfolS7om5uvZjFfDKYNvDfu/BBOUVCr0HmsWQFpxi5bBgzF1kVKbtGW7ELUMaGtDck2Z24q0wnJpIbPWVbygNV0GaO2/OsxLGcWknQ61G8dvY9SsDEDm/U4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Component diagram&quot;
+        title=&quot;Component-diagram&quot;
+        src=&quot;/static/666fd4aff90670bef50b942709b30e21/a6d36/cd2.png&quot;
+        srcset=&quot;/static/666fd4aff90670bef50b942709b30e21/222b7/cd2.png 163w,
+/static/666fd4aff90670bef50b942709b30e21/ff46a/cd2.png 325w,
+/static/666fd4aff90670bef50b942709b30e21/a6d36/cd2.png 650w,
+/static/666fd4aff90670bef50b942709b30e21/e548f/cd2.png 975w,
+/static/666fd4aff90670bef50b942709b30e21/3c492/cd2.png 1300w,
+/static/666fd4aff90670bef50b942709b30e21/fa60d/cd2.png 1792w&quot;
+        sizes=&quot;(max-width: 650px) 100vw, 650px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Fig: Component diagram for rate limiter&lt;/p&gt;
+&lt;h4&gt;ERD&lt;/h4&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 650px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/eedd105b2d1de0cd0d62304ef66ddb42/18d55/erd.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 34.355828220858896%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABNElEQVQoz02RyY6DMBBE/f8fliiTQ5RtIkxALAPGeME2oBxr1D1DlEMJunlV7jbCWA89WujR4KdTLDVoDNpADSOcD4hpYfkpYjSO+a4f3jyJeOqLTEpcLhdImeN2u2G32+F+/0ZVVSiKAsMwcliaV/RqYPZ8PmO/3+N4POJw+GIf8XVdQzRNy8Z5nvF6vdA0DZucc1z7KWAKCSHOsM6zWUqJlBK8928v1TFGiLZt8Xw+uUkqyxKn04mDlVIwxnEgrRtCwuPxQNd1WNcVxhg+nDKI9X6C6PueIWstQzR2lmXI85zDacKQFp6Qgmk66i/LwlsQS/Xf9WiIoixxvV7R9wohRFRVzR/oNOc8/xQKo3scjf1fOYefJmitUdU1nPew1sE6B7GtQ9re6fkpCty0sZ/6ZH8BtnEGU4i2LEMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ERD&quot;
+        title=&quot;ERD&quot;
+        src=&quot;/static/eedd105b2d1de0cd0d62304ef66ddb42/a6d36/erd.png&quot;
+        srcset=&quot;/static/eedd105b2d1de0cd0d62304ef66ddb42/222b7/erd.png 163w,
+/static/eedd105b2d1de0cd0d62304ef66ddb42/ff46a/erd.png 325w,
+/static/eedd105b2d1de0cd0d62304ef66ddb42/a6d36/erd.png 650w,
+/static/eedd105b2d1de0cd0d62304ef66ddb42/e548f/erd.png 975w,
+/static/eedd105b2d1de0cd0d62304ef66ddb42/3c492/erd.png 1300w,
+/static/eedd105b2d1de0cd0d62304ef66ddb42/18d55/erd.png 2470w&quot;
+        sizes=&quot;(max-width: 650px) 100vw, 650px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Fig: ER diagram showing relationship between merchants and their rate limiting rules&lt;/p&gt;
+&lt;h4&gt;Overview of proposed Rate Limiter&lt;/h4&gt;
+&lt;p&gt;From the above ER diagram, we are storing one or more rate limiting rules per merchant which may have different
+priorities. Each merchant will be identified by an unique merchant id. Rate limits will be applied such that a
+rule with higher priority is chosen for a merchant.&lt;/p&gt;
+&lt;p&gt;Also, this implementation provides Rules service which exposes APIs for administrators to manage rules
+for each merchant.&lt;/p&gt;
+&lt;p&gt;For the implementation of Rate Limiter, Token bucket algorithm is used. This algorithm inherently handles
+traffic bursts. This algorithm uses the concept of tokens in buckets. Empty bucket means upcoming
+requests will be throttled until it is refilled. For its parameters, we provide bucket size or burst
+size and refill rate. For the use case to handle traffic bursts, it’s advised to provide higher bucket
+size than the refill rate.&lt;/p&gt;
+&lt;h4&gt;Token Bucket Algorithm&lt;/h4&gt;
+&lt;p&gt;The token bucket algorithm is a simple and popular mechanism for rate limiting that supports traffic bursts.
+Three major components of this algorithm are Bucket, Token and Refill rate. Bucket is a container that
+holds a certain number of tokens and bucket size signifies the burst capacity. Token represents the permission
+to process the request. Refill rate is the rate at which tokens are added to the bucket.&lt;/p&gt;
+&lt;p&gt;Let’s look at some Go code for implementing the token bucket algorithm. It assumes a refill rate of n tokens
+per second for brevity.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; main
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;sync&quot;&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;time&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; TokenBucket &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  maxTokens  &lt;span class=&quot;token builtin&quot;&gt;int64&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// Bucket or burst size&lt;/span&gt;
+  fillRate   &lt;span class=&quot;token builtin&quot;&gt;int64&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// n tokens per second for brevity&lt;/span&gt;
+  curTokens  &lt;span class=&quot;token builtin&quot;&gt;int64&lt;/span&gt;
+  lastRefill time&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Time
+  mutex      sync&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Mutex
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;NewTokenBucket&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;maxTokens&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; fillRate &lt;span class=&quot;token builtin&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;TokenBucket &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;TokenBucket&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    maxTokens&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  maxTokens&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    fillRate&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;   fillRate&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    curTokens&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;  maxTokens&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// Initially filled with max tokens&lt;/span&gt;
+    lastRefill&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; time&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    mutex&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;      sync&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Mutex&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;bucket &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;TokenBucket&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;AllowRequest&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;tokens &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token comment&quot;&gt;// Use lock to prevent race conditions while updating token size&lt;/span&gt;
+  bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mutex&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Lock&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;defer&lt;/span&gt; bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mutex&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Unlock&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;refill&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;curTokens &lt;span class=&quot;token operator&quot;&gt;&gt;=&lt;/span&gt; tokens &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;curTokens &lt;span class=&quot;token operator&quot;&gt;-=&lt;/span&gt; tokens
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;bucket &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;TokenBucket&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;refill&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  now &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; time&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  elapsed &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; now&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Sub&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;lastRefill&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  tokensToAdd &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;elapsed &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt; time&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Second&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt; bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;fillRate
+
+  &lt;span class=&quot;token comment&quot;&gt;// Ensure bucket doesn&apos;t overflow&lt;/span&gt;
+  bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;curTokens &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;curTokens&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;tokensToAdd&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;maxTokens&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  bucket&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;lastRefill &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; now
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; b &lt;span class=&quot;token builtin&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;int64&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; a &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; b &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; a
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; b
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let’s look at an example on how traffic bursts are handled by this algorithm. Let’s assume the bucket
+size is 10 and refill rate is 5 per second.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 650px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/99ddfa19778c1055711680f3be09d80c/defc9/tba2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 28.834355828220858%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABC0lEQVQY001R2Y7CMBDj/z9rL9SFBRqKaHM0k0yOsj/h1aRU7IPlxIo8HmdXckLJGTmtzDGCvG+Q838teI/E3DTh7d2miccup5fZUgussVC9ajDa4LFUaK3RX3oopTDPc9Occ+if75x1qKWsht0tQOmASASOAY4SujHje8xwxEiBMLmIg/nFUS9wPoIDYSbGYapNN14CJUi4nXYET7G5C2S92zRjGO1r5ZQwzYzRUbvX53raBYyWwMx41LomjOSRnx1I7EAEqyfcbwNiCOAQ0B8POO2/0L2/YbheYY1pfPo5Yv/5gcv5jPF+Xw3FaCt061KMl1pRSkGSKoYrWPVIw9AGCmTYxgL5HDH8A2ozsK2p4oXaAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Token bucket algorithm&quot;
+        title=&quot;Token-bucket-algorithm&quot;
+        src=&quot;/static/99ddfa19778c1055711680f3be09d80c/a6d36/tba2.png&quot;
+        srcset=&quot;/static/99ddfa19778c1055711680f3be09d80c/222b7/tba2.png 163w,
+/static/99ddfa19778c1055711680f3be09d80c/ff46a/tba2.png 325w,
+/static/99ddfa19778c1055711680f3be09d80c/a6d36/tba2.png 650w,
+/static/99ddfa19778c1055711680f3be09d80c/e548f/tba2.png 975w,
+/static/99ddfa19778c1055711680f3be09d80c/3c492/tba2.png 1300w,
+/static/99ddfa19778c1055711680f3be09d80c/defc9/tba2.png 2046w&quot;
+        sizes=&quot;(max-width: 650px) 100vw, 650px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Fig: Traffic burst in Token bucket algorithm&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Bucket is initialised with max token size of 10&lt;/li&gt;
+&lt;li&gt;10 Requests worth of 10 tokens arrive simultaneously after 500 milliseconds causing the token size to deplete to 0&lt;/li&gt;
+&lt;li&gt;Next 2 requests come after 200 milliseconds. 200 milliseconds wait is worth 1 token since rate of refill is 5 tokens per seconds. 1 token is sent for processing while another token is dropped&lt;/li&gt;
+&lt;li&gt;Similarly, another request arrives after 1200 milliseconds wait which refills bucket with 6 tokens&lt;/li&gt;
+&lt;li&gt;After this, requests are processed in steady rate of 5 requests per second until another traffic burst&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Storing token buckets&lt;/h4&gt;
+&lt;p&gt;Every time a background job is run, it fetches the rules for a chunk of merchants, creates bucket objects
+from the rules and stores it in some in-memory cache like redis. Merchant id can be used as a key for each
+bucket. With minimum overhead, Rate limiter can access the bucket for a specific merchant when the merchant
+makes a transaction request.&lt;/p&gt;
+&lt;p&gt;Assuming millions of merchants exist in the system. Should we keep a bucket for each of them in the cache?
+No. Buckets will have some expiration time and will be deleted if no requests are using the bucket for more
+than refill rate. New bucket is created by the Rate limiter if the bucket is not found in cache for that
+merchant.&lt;/p&gt;
+&lt;h4&gt;Distributed Rate Limiter and its challenges&lt;/h4&gt;
+&lt;p&gt;We can horizontally scale the rate limiter hosted in EC2 using Auto scaling group (ASG) and Load balancer.
+When the load on rate limiter increases ASG scales out EC2 instances to match an increased load or scale
+in to match decreased load. It automatically registers new instances to load balancer. Load balancer (LB)
+is responsible for spreading load across multiple rate limiter instances.&lt;/p&gt;
+&lt;p&gt;Distributed environment brings few challenges. Assuming we will be maintaining a bucket cache in each host,
+how many tokens should be assigned for each bucket of a merchant? Each bucket should be assigned the max number
+of tokens it can store. Because in theory, all requests could land in the same host. In reality though,
+most requests will probably be distributed to different hosts by LB.&lt;/p&gt;
+&lt;p&gt;So, how do we make sure that distributed requests do not consume more tokens than the bucket size?
+To solve this problem, we should allow each host to talk to each other and share how many tokens
+each host consumed altogether. Each host will subtract the sum collected from all the other hosts to get remaining
+tokens.There’s still a chance that our system may be processing more requests than expected when all
+requests arrive at the same time in each host and are unable to talk to each other.&lt;/p&gt;
+&lt;p&gt;There are few ways we can make each host talk to each other. Some popular message broadcasting ways are
+consensus algorithms like paxos or raft, full mesh broadcasting - where each host is connected to
+every other host. These are complex to implement, consumes huge network and storage resources. The simplest and
+most popular way would be to use a central cache repository shared by all the hosts.&lt;/p&gt;
+&lt;h4&gt;Comparison with other algorithms&lt;/h4&gt;
+&lt;h5&gt;Fixed window algorithm&lt;/h5&gt;
+&lt;p&gt;It divides time into fixed-size windows and counts the number of requests in the current window.If the count exceeds the allowed limit, further requests are denied until the next window.&lt;/p&gt;
+&lt;p&gt;Although easy to implement, it cannot handle traffic bursts. Also, when requests arrive at the edges of two consecutive windows, the rate limit exceeds the applied rate limit rules.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 650px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/ce2949f9ff95729c0175684d9bb10adf/e6c84/fwa.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 46.012269938650306%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA7UlEQVQoz21SWw6EIAz0/scy2Y2PTdwfXXzgW/QW3UyTIUj8KANMp7S0ybHv4o5DgNyfznnjHX1CPtSRS8LLyzlpjZEiz+X9esmnLH1Q4GitlEUhWZZJmqYy9P3tUWDCwzxNsm+bXgK3dVWEYJlntes8lQenfKTVDPn6NI4+k7jkdVnUKERg8thD6wNiwcEYowQygRCG/beqpKlrsdYqoszQBw/1XafaW0A4MggNznYY5Nc0ihA++YDH//qS486yg0D8FV6HAMFiPzbrVnLY+ngMkBkE+KuubTWrp3HxXeYhNjqyLHYTGcdzG87hHw5Uj4k5XJ0RAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Fixed window algorithm&quot;
+        title=&quot;Fixed window algorithm&quot;
+        src=&quot;/static/ce2949f9ff95729c0175684d9bb10adf/a6d36/fwa.png&quot;
+        srcset=&quot;/static/ce2949f9ff95729c0175684d9bb10adf/222b7/fwa.png 163w,
+/static/ce2949f9ff95729c0175684d9bb10adf/ff46a/fwa.png 325w,
+/static/ce2949f9ff95729c0175684d9bb10adf/a6d36/fwa.png 650w,
+/static/ce2949f9ff95729c0175684d9bb10adf/e548f/fwa.png 975w,
+/static/ce2949f9ff95729c0175684d9bb10adf/e6c84/fwa.png 1148w&quot;
+        sizes=&quot;(max-width: 650px) 100vw, 650px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Fig: Fixed window algorithm&lt;/p&gt;
+&lt;p&gt;Let’s say there’s a rule that says requests should be dropped if the number of requests exceeds 5 requests per minute. In the fixed window algorithm, 5 requests arrive at 900ms of the first window - it is sent for processing. In another window, the request counter is reset and another 5 requests arrive after 100ms. These requests are sent for processing as well. Two chunks of requests arrived within a period of 200ms and 10 requests were sent for processing within the period. This far exceeds the rate limit rule we’ve set.&lt;/p&gt;
+&lt;h5&gt;Sliding window algorithm&lt;/h5&gt;
+&lt;p&gt;It is similar to Fixed Window but uses a sliding window to smooth out the boundary effects. The window slides over time and counts requests within the current window span. It is more accurate than the fixed window algorithm but is more complex to implement. Since it requires maintaining timestamps for each request, more storage and computation power is required.&lt;/p&gt;
+&lt;h4&gt;Rate limiting by IP vs User&lt;/h4&gt;
+&lt;p&gt;The issue with rate limiting by IP is that multiple users may share the same public IP address for example in places like cafe or smartphone users using the same internet gateway. One bad user may cause throttling for other users. Also, people using IPV6 have options to use multiple IPs from a single computer making it hard to track them.&lt;/p&gt;
+&lt;p&gt;Authenticated user’s token can be used to track the user and rate limit their requests. Weakness of this type of rate limiting might be that hackers may DOS attack against a specific user by entering wrong credentials.&lt;/p&gt;
+&lt;p&gt;We could take an approach where we use both IP and user token to track the user. Though, this approach will require more storage.&lt;/p&gt;
+&lt;h4&gt;Testing the efficiency of rate limiter&lt;/h4&gt;
+&lt;p&gt;We can use load testing tools like Locust to simulate different traffic scenarios like steady and burst. Next step would be to monitor and measure different metrics to validate if the rate limiter is working as expected. Following may be some of the metrics that need attention:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Throughput: Number of requests per set interval for each merchant&lt;/li&gt;
+&lt;li&gt;Error Rate: Number of requests denied&lt;/li&gt;
+&lt;li&gt;CPU and memory usage by rate limiter and API services&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Amend an old commit in git]]></title><description><![CDATA[Premise If you wanted to amend the latest commit, you would just do  to already staged files.
 But what if you want to ammend a commit that…]]></description><link>https://www.samya-ak.github.io/amend-commit/</link><guid isPermaLink="false">https://www.samya-ak.github.io/amend-commit/</guid><pubDate>Thu, 22 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h4&gt;Premise&lt;/h4&gt;
 &lt;p&gt;If you wanted to amend the latest commit, you would just do &lt;code class=&quot;language-text&quot;&gt;git commit --amend&lt;/code&gt; to already staged files.
 But what if you want to ammend a commit that is not the latest one? Read on …&lt;/p&gt;
