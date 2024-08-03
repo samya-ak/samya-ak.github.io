@@ -58,6 +58,8 @@ try {
           return;
         }
     }
+
+    // Proceed with creating company
 }
 ```
 
@@ -66,6 +68,7 @@ The value of `createCompany` will be resolved based on whether the user chooses 
 ```jsx
     <WarningModal
         ...
+        // proceed is true/false based on user action
         onUserAction={(proceed) => {
             if (createCompanyResolver.resolve) {
                 createCompanyResolver.resolve(proceed);
