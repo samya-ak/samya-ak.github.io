@@ -69,15 +69,6 @@ module.exports = {
       options: {
         plugins: [
           {
-            resolve: `gatsby-remark-mermaid`,
-            options: /** @type {import('gatsby-remark-mermaid').Options} */ ({
-              mermaidConfig: {
-                theme: "neutral",
-                themeCSS: ".node rect { fill: #fff; }",
-              },
-            }),
-          },
-          {
             resolve: `gatsby-remark-images`,
             options: {},
           },

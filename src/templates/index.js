@@ -9,7 +9,7 @@ import Pagination from "../components/Pagination"
 
 const BlogIndex = ({ data, pageContext }) => {
   const all = data.allMarkdownRemark.nodes
-  const posts = all.filter(md => md.frontmatter.title != "Portfolio")
+  const posts = all.filter(md => md.frontmatter.title !== "Portfolio")
 
   if (posts.length === 0) {
     return (

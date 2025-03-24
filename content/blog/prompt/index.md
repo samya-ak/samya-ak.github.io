@@ -5,21 +5,6 @@ description: "You need to show a prompt depending on an API call. Depending on t
 subject: ["react", "ts"]
 ---
 
-#### Scenario
-
-If the description made you more confused about what this is actually about, here's a flowchart
-diagram for you:
-
-```mermaid
-flowchart TD
-    id1(Check if prompt needs to be shown via API call)
-    --> id2{Prompt shown?}
-    id2 -->|Yes| id3{Show prompt with Yes/No buttons}
-    id2 -->|No| id4(Make 2nd API call)
-    id3 -->|Yes| id5(Make 2nd API call)
-    id3 -->|No| id6(Close the prompt)
-```
-
 #### Usecase
 
 You're trying to create a Company.If a company name already exists, users should be warned that
