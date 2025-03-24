@@ -8,7 +8,8 @@ import _ from "lodash"
 import Pagination from "../components/Pagination"
 
 const BlogIndex = ({ data, pageContext }) => {
-  const posts = data.allMarkdownRemark.nodes
+  const all = data.allMarkdownRemark.nodes
+  const posts = all.filter(md => md.frontmatter.title != "Portfolio")
 
   if (posts.length === 0) {
     return (

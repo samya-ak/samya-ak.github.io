@@ -9,6 +9,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   // Define a template for blog post
   const blogPost = path.resolve(`./src/templates/blog-post.js`)
   const subjects = path.resolve(`./src/templates/subjects.js`)
+  const portfolio = path.resolve(`./src/templates/portfolio.js`)
   // Get all markdown blog posts sorted by date
   const result = await graphql(
     `
@@ -22,6 +23,10 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             fields {
               slug
             }
+            frontmatter {
+              title
+            }
+            fileAbsolutePath
           }
         }
         taxQuery: allMarkdownRemark {
@@ -44,7 +49,11 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     return
   }
 
-  const posts = result.data.allMarkdownRemark.nodes
+  const allMarkdowns = result.data.allMarkdownRemark.nodes
+  const portfolioPage = allMarkdowns.find(page =>
+    page.fileAbsolutePath.includes(path.resolve(`./content/portfolio/index.md`))
+  )
+  const posts = allMarkdowns.filter(md => md.id != portfolioPage.id)
 
   // Create blog posts pages
   // But only if there's at least one markdown file found at "content/blog" (defined in gatsby-config.js)
@@ -87,6 +96,16 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       context: { subject: fieldValue },
     })
   })
+
+  if (portfolioPage) {
+    createPage({
+      path: `/portfolio/`, // Set the desired URL
+      component: portfolio,
+      context: {
+        id: portfolioPage.id,
+      },
+    })
+  }
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {

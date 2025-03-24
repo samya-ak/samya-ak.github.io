@@ -49,6 +49,6 @@
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
-    "postinstall": "npx playwright install --with-deps chromium"
+    "postinstall": "if [ \"$VERCEL\" != \"1\" ]; then npx playwright install --with-deps chromium; fi"
   }
 }

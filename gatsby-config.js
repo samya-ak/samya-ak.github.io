@@ -20,6 +20,10 @@ module.exports = {
         name: "About",
         link: `/about`,
       },
+      {
+        name: "Portfolio",
+        link: `/portfolio`,
+      },
     ],
   },
   plugins: [
@@ -37,6 +41,13 @@ module.exports = {
         rule: {
           include: /images/,
         },
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/portfolio`,
+        name: `portfolio`,
       },
     },
     {

@@ -5,7 +5,6 @@ import { Link } from "gatsby"
 import * as styles from "./pagination.module.scss"
 
 const Pagination = ({ pageContext }) => {
-  console.log("PC", pageContext)
   const { previousPagePath, nextPagePath } = pageContext
   return (
     <nav className={styles.pagenav}>
